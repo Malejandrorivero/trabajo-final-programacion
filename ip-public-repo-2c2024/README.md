@@ -14,6 +14,6 @@ Maximo Rivero
 
 Ignacio Tomas Cauzzo 
 
-Ticiano Maggio Óscar
+Ticiano Maggio 
 
-Daniel Reyes Fernandez
+Óscar Daniel Reyes Fernandez
