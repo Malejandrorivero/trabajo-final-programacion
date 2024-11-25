@@ -12,10 +12,8 @@ Conformado por:
 
 Maximo Rivero
 
-Ignacio Tomas
+Ignacio Tomas Cauzzo 
 
-Cauzzo Ticiano
-
-Maggio Óscar
+Ticiano Maggio Óscar
 
 Daniel Reyes Fernandez
