@@ -1,0 +1,71 @@
+{% extends 'header.html' %} {% block content %}
+<main class="container mt-4">
+    <h1 class="text-center mb-4">Buscador Rick & Morty</h1>
+
+    <div class="d-flex justify-content-center mb-3">
+        <form class="form-inline" action="{% url 'buscar' %}" method="POST">
+            {% csrf_token %}
+            <input class="form-control mr-2" type="search" name="query" placeholder="Escribí una palabra" aria-label="Search" value="{{ query }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <div class="row">
+        {% if images|length == 0 %}
+        <div class="col-12">
+            <h2 class="text-center">La búsqueda no arrojó resultados...</h2>
+        </div>
+        {% else %}
+        {% for img in images %}
+        <div class="col-md-4 mb-3">
+            <div class="card h-100">
+                <img src="{{ img.url }}" class="card-img-top" alt="{{ img.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ img.name }}</h5>
+                    <p class="card-text">
+                        <strong>
+                            {% if img.status == 'Alive' %} 🟢 {{ img.status }}
+                            {% elif img.status == 'Dead' %} 🔴 {{ img.status }}
+                            {% else %} 🟠 {{ img.status }}
+                            {% endif %}
+                        </strong>
+                    </p>
+                    <p class="card-text"><small class="text-muted">Última ubicación: {{ img.last_location }}</small></p>
+                    <p class="card-text"><small class="text-muted">Episodio inicial: {{ img.first_seen }}</small></p>
+                </div>
+                {% if request.user.is_authenticated %}
+                <div class="card-footer">
+                    <form method="post" action="{% url 'agregar-favorito' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="name" value="{{ img.name }}">
+                        <input type="hidden" name="url" value="{{ img.url }}">
+                        <input type="hidden" name="status" value="{{ img.status }}">
+                        <input type="hidden" name="last_location" value="{{ img.last_location }}">
+                        <input type="hidden" name="first_seen" value="{{ img.first_seen }}">
+                        {% if img in favourite_list %}
+                        <button type="submit" class="btn btn-primary btn-block" disabled>✔️ Ya está en favoritos</button>
+                        {% else %}
+                        <button type="submit" class="btn btn-primary btn-block">❤️ Añadir a favoritos</button>
+                        {% endif %}
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                {% for i in pages %}
+                <li class="page-item {% if i == current_page %}active{% endif %}">
+                    <a class="page-link" href="?query={{ query }}&page={{ i }}">{{ i }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </div>
+</main>
+{% endblock %}
