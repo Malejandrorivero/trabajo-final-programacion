@@ -1,4 +1,5 @@
-{% extends 'header.html' %} {% block content %}
+{% extends 'header.html' %}
+{% block content %}
 <main class="container mt-4">
     <h1 class="text-center mb-4">Buscador Rick & Morty</h1>
 
@@ -18,7 +19,16 @@
         {% else %}
         {% for img in images %}
         <div class="col-md-4 mb-3">
-            <div class="card h-100">
+            <div class="card h-100" style="
+                border: 2px solid;
+                {% if img.status == 'Alive' %}
+                    border-color: green;
+                {% elif img.status == 'Dead' %}
+                    border-color: red;
+                {% else %}
+                    border-color: orange;
+                {% endif %}
+            ">
                 <img src="{{ img.url }}" class="card-img-top" alt="{{ img.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ img.name }}</h5>

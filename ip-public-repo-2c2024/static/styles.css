@@ -1,8 +1,15 @@
 body {
-    color: #12420c;
-    background: #38ca0c;
+    color: #898484;
+    background: #ffffff;
     font-family: 'Roboto', sans-serif;
 }
+
+
+
+.navbar, .card {
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente para elementos de navegación y tarjetas */
+}
+
 
 .table-responsive {
     margin: 30px 0;

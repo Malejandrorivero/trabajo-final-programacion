@@ -3,6 +3,41 @@ from .layers.services import services
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from .forms import UserRegisterForm
+from django.shortcuts import render
+from django.utils.encoding import smart_str
+
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+
+            # Enviar correo electrónico con codificación UTF-8
+            subject = smart_str('Registro exitoso', encoding='utf-8')
+            message = smart_str(f'Tus credenciales de acceso son:\n\nUsuario: {user.username}\nClave: {form.cleaned_data["password"]}', encoding='utf-8')
+            
+            send_mail(
+                subject,
+                message,
+                'tu_correo@gmail.com',
+                [user.email],
+                fail_silently=False,
+            )
+            
+            messages.success(request, 'Tu cuenta ha sido creada exitosamente. Revisa tu correo electrónico para más detalles.')
+            return render(request, 'registration/register.html', {'form': form, 'show_message': True})
+    else:
+        form = UserRegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+
 
 def index_page(request):
     return render(request, 'index.html')
@@ -35,7 +70,7 @@ def login_user(request):
         else:
             messages.error(request, 'Usuario o contraseña incorrectos. Inténtalo de nuevo.')
             return redirect('login')
-    return render(request, 'login.html')
+    return render(request, 'registration/login.html')
 
 @login_required
 def getAllFavouritesByUser(request):
